@@ -13,7 +13,7 @@ interface Message {
   phone?: string;
   message: string;
   read: boolean;
-  createdAt: any;
+  createdAt: Date | { toDate: () => Date } | null;
 }
 
 export default function MessagesManagement() {

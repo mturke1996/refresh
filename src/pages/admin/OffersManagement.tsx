@@ -46,8 +46,8 @@ interface Offer {
   categoryId?: string;
   itemIds?: string[];
   linkUrl?: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt?: Date | { toDate: () => Date };
+  updatedAt?: Date | { toDate: () => Date };
 }
 
 export default function OffersManagement() {

@@ -1,9 +1,8 @@
 @echo off
-git init
+echo Uploading to GitHub...
 git add .
-git commit -m "Initial commit: Refresh Cafe website"
-git branch -M main
-git remote add origin https://github.com/mturke1996/refresh.git
-git push -u origin main
+git commit -m "Fix: TypeScript build errors and type safety"
+git push
+echo Done!
 pause
 

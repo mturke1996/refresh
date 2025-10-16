@@ -8,8 +8,16 @@ export const formatPrice = (price: number): string => {
 /**
  * Format date
  */
-export const formatDate = (date: Date | string, locale = 'ar-SA'): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
+export const formatDate = (date: Date | string | { toDate: () => Date } | null, locale = 'ar-SA'): string => {
+  if (!date) return '';
+  let d: Date;
+  if (typeof date === 'string') {
+    d = new Date(date);
+  } else if (date instanceof Date) {
+    d = date;
+  } else {
+    d = (date as { toDate: () => Date }).toDate();
+  }
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',

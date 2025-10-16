@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useFeaturedItems } from '../hooks/useFirestore';
 import MenuItem from './MenuItem';
 import SkeletonLoader from './SkeletonLoader';
+import { MenuItem as MenuItemType } from '../types';
 
 export default function FeaturedSection() {
   const { data: offers, loading: offersLoading } = useFeaturedItems('offer');
@@ -41,7 +42,7 @@ export default function FeaturedSection() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {offers.map((item, index) => (
-                  <MenuItem key={item.id} item={item} index={index} />
+                  <MenuItem key={item.id} item={item as MenuItemType} index={index} />
                 ))}
               </div>
             )}
@@ -72,7 +73,7 @@ export default function FeaturedSection() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {newItems.map((item, index) => (
-                  <MenuItem key={item.id} item={item} index={index} />
+                  <MenuItem key={item.id} item={item as MenuItemType} index={index} />
                 ))}
               </div>
             )}

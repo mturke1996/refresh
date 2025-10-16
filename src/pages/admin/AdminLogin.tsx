@@ -28,7 +28,7 @@ export default function AdminLogin() {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success('تم تسجيل الدخول بنجاح');
       navigate('/admin/dashboard');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Login error:', error);
       toast.error('خطأ في البريد الإلكتروني أو كلمة المرور');
     } finally {

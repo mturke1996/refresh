@@ -4,6 +4,7 @@ import { Home, UtensilsCrossed, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCategories, useMenuItems } from '../hooks/useFirestore';
 import MenuItem from './MenuItem';
 import SkeletonLoader from './SkeletonLoader';
+import { MenuItem as MenuItemType } from '../types';
 
 export default function MenuSection() {
   const { data: categories, loading: categoriesLoading } = useCategories();
@@ -91,7 +92,7 @@ export default function MenuSection() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {items.map((item, index) => (
-              <MenuItem key={item.id} item={item} index={index} />
+              <MenuItem key={item.id} item={item as MenuItemType} index={index} />
             ))}
           </motion.div>
         )}

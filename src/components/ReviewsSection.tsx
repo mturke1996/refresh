@@ -11,7 +11,7 @@ interface Review {
   rating: number;
   text: string;
   adminReply?: string;
-  createdAt: any;
+  createdAt: Date | { toDate: () => Date } | null;
   approved: boolean;
 }
 
@@ -101,9 +101,9 @@ export default function ReviewsSection() {
     }
   };
 
-  const formatDate = (timestamp: any) => {
+  const formatDate = (timestamp: Date | { toDate: () => Date } | null) => {
     if (!timestamp) return '';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = timestamp instanceof Date ? timestamp : (timestamp as { toDate: () => Date }).toDate();
     return new Intl.DateTimeFormat('ar-LY', {
       year: 'numeric',
       month: 'short',
@@ -111,8 +111,8 @@ export default function ReviewsSection() {
     }).format(date);
   };
 
-  const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0;
+  const calculateAverageRating = (): string => {
+    if (reviews.length === 0) return '0';
     const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
     return (sum / reviews.length).toFixed(1);
   };
