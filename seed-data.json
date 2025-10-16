@@ -1,0 +1,135 @@
+{
+  "categories": [
+    {
+      "name": "مشروبات ساخنة",
+      "nameEn": "Hot Drinks",
+      "order": 0,
+      "active": true
+    },
+    {
+      "name": "مشروبات باردة",
+      "nameEn": "Cold Drinks",
+      "order": 1,
+      "active": true
+    },
+    {
+      "name": "كيك وحلويات",
+      "nameEn": "Cakes & Desserts",
+      "order": 2,
+      "active": true
+    },
+    {
+      "name": "كريب",
+      "nameEn": "Crepes",
+      "order": 3,
+      "active": true
+    }
+  ],
+  "items": [
+    {
+      "name": "إسبريسو",
+      "nameEn": "Espresso",
+      "description": "قهوة إسبريسو إيطالية أصيلة محضرة من أجود أنواع البن",
+      "descriptionEn": "Authentic Italian espresso made from the finest coffee beans",
+      "price": 15.00,
+      "discountPercent": 0,
+      "categoryId": "hot-drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=800&q=80",
+      "available": true,
+      "isNew": false,
+      "isOnOffer": false
+    },
+    {
+      "name": "كابتشينو",
+      "nameEn": "Cappuccino",
+      "description": "مزيج رائع من الإسبريسو والحليب المخفوق برغوة كريمية",
+      "descriptionEn": "Perfect blend of espresso and steamed milk with creamy foam",
+      "price": 18.00,
+      "discountPercent": 10,
+      "categoryId": "hot-drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=800&q=80",
+      "available": true,
+      "isNew": false,
+      "isOnOffer": true
+    },
+    {
+      "name": "لاتيه فانيليا",
+      "nameEn": "Vanilla Latte",
+      "description": "لاتيه كريمي مع نكهة الفانيليا الفرنسية الطبيعية",
+      "descriptionEn": "Creamy latte with natural French vanilla flavor",
+      "price": 20.00,
+      "discountPercent": 0,
+      "categoryId": "hot-drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=800&q=80",
+      "available": true,
+      "isNew": true,
+      "isOnOffer": false
+    },
+    {
+      "name": "آيس موكا",
+      "nameEn": "Iced Mocha",
+      "description": "قهوة باردة بنكهة الشوكولاتة الغنية مع الحليب والثلج",
+      "descriptionEn": "Cold coffee with rich chocolate flavor, milk and ice",
+      "price": 22.00,
+      "discountPercent": 15,
+      "categoryId": "cold-drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=800&q=80",
+      "available": true,
+      "isNew": false,
+      "isOnOffer": true
+    },
+    {
+      "name": "فراپيه كراميل",
+      "nameEn": "Caramel Frappe",
+      "description": "مشروب مخفوق بارد بنكهة الكراميل اللذيذة",
+      "descriptionEn": "Delicious cold blended drink with caramel flavor",
+      "price": 24.00,
+      "discountPercent": 0,
+      "categoryId": "cold-drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1562184552-28c85e0d0378?w=800&q=80",
+      "available": true,
+      "isNew": true,
+      "isOnOffer": false
+    },
+    {
+      "name": "تشيز كيك فراولة",
+      "nameEn": "Strawberry Cheesecake",
+      "description": "تشيز كيك كريمي بطبقة فراولة طازجة",
+      "descriptionEn": "Creamy cheesecake topped with fresh strawberries",
+      "price": 28.00,
+      "discountPercent": 20,
+      "categoryId": "cakes",
+      "imageUrl": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80",
+      "available": true,
+      "isNew": false,
+      "isOnOffer": true
+    },
+    {
+      "name": "براوني شوكولاتة",
+      "nameEn": "Chocolate Brownie",
+      "description": "براوني شوكولاتة دافئ مع آيس كريم الفانيليا",
+      "descriptionEn": "Warm chocolate brownie with vanilla ice cream",
+      "price": 25.00,
+      "discountPercent": 0,
+      "categoryId": "cakes",
+      "imageUrl": "https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=800&q=80",
+      "available": true,
+      "isNew": false,
+      "isOnOffer": false
+    },
+    {
+      "name": "كريب نوتيلا",
+      "nameEn": "Nutella Crepe",
+      "description": "كريب محشي بالنوتيلا الشهية مع الموز والفراولة",
+      "descriptionEn": "Crepe filled with delicious Nutella, banana and strawberry",
+      "price": 30.00,
+      "discountPercent": 0,
+      "categoryId": "crepes",
+      "imageUrl": "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=800&q=80",
+      "available": true,
+      "isNew": true,
+      "isOnOffer": false
+    }
+  ]
+}
+

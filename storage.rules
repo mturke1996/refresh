@@ -1,0 +1,50 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email != null;
+    }
+    
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidSize() {
+      // Max 5MB
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // Items images - Read: Everyone, Write: Admin only
+    match /items/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin() && isImage() && isValidSize();
+      allow delete: if isAdmin();
+    }
+    
+    // Hero carousel images - Read: Everyone, Write: Admin only
+    match /hero/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin() && isImage() && isValidSize();
+      allow delete: if isAdmin();
+    }
+    
+    // Logo and settings images - Read: Everyone, Write: Admin only
+    match /settings/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin() && isImage() && isValidSize();
+      allow delete: if isAdmin();
+    }
+    
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
