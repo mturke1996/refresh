@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, updateDoc, doc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, query, orderBy, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { Order } from '../../types';
 import { formatDate, formatPrice } from '../../utils/formatters';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { notifyOrderStatusUpdate } from '../../utils/telegramNotifications';
 
 const statusOptions = [
   { value: 'pending', label: 'قيد الانتظار', color: 'bg-yellow-100 text-yellow-700' },
@@ -46,6 +47,18 @@ export default function OrdersManagement() {
   const updateOrderStatus = async (orderId: string, status: Order['status']) => {
     try {
       await updateDoc(doc(db, 'orders', orderId), { status });
+      
+      // Send Telegram notification
+      try {
+        const orderDoc = await getDoc(doc(db, 'orders', orderId));
+        if (orderDoc.exists()) {
+          await notifyOrderStatusUpdate(orderDoc.data(), orderId, status);
+        }
+      } catch (telegramError) {
+        console.error('Failed to send Telegram notification:', telegramError);
+        // Don't fail the update if Telegram fails
+      }
+      
       toast.success('تم تحديث حالة الطلب');
       fetchOrders();
       setSelectedOrder(null);

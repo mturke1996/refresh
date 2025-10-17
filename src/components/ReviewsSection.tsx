@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp, query, where, orderBy, getDocs, limit } from 'firebase/firestore';
 import { db } from '../firebase';
 import toast from 'react-hot-toast';
+import { notifyNewReview } from '../utils/telegramNotifications';
 
 interface Review {
   id: string;
@@ -80,12 +81,22 @@ export default function ReviewsSection() {
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, 'comments'), {
+      const reviewData = {
         ...formData,
         approved: false,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      };
+      
+      const docRef = await addDoc(collection(db, 'comments'), reviewData);
+
+      // Send Telegram notification
+      try {
+        await notifyNewReview({ ...formData, approved: false }, docRef.id);
+      } catch (telegramError) {
+        console.error('Failed to send Telegram notification:', telegramError);
+        // Don't fail the review if Telegram fails
+      }
 
       toast.success('شكراً لك! تقييمك قيد المراجعة وسيظهر قريباً 🎉');
       setFormData({ userName: '', rating: 5, text: '' });
@@ -159,21 +170,21 @@ export default function ReviewsSection() {
             تجارب حقيقية من عملاء سعداء بخدماتنا
           </p>
 
-          {/* Rating Summary */}
+          {/* Rating Summary - Mobile Optimized */}
           {reviews.length > 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-6 bg-white rounded-2xl shadow-xl p-6 border-2 border-yellow-100"
+              className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-yellow-100 w-full sm:w-auto max-w-md mx-auto"
             >
               <div className="text-center">
-                <div className="text-5xl font-bold text-gray-900 mb-2">{calculateAverageRating()}</div>
+                <div className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">{calculateAverageRating()}</div>
                 <div className="flex gap-1 mb-2 justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-5 h-5 ${
+                      className={`w-4 h-4 sm:w-5 sm:h-5 ${
                         i < Math.round(parseFloat(calculateAverageRating()))
                           ? 'text-yellow-400 fill-yellow-400'
                           : 'text-gray-300'
@@ -181,22 +192,23 @@ export default function ReviewsSection() {
                     />
                   ))}
                 </div>
-                <p className="text-sm text-gray-600">{reviews.length} تقييم</p>
+                <p className="text-xs sm:text-sm text-gray-600">{reviews.length} تقييم</p>
               </div>
               
-              <div className="border-r-2 border-gray-200 h-20"></div>
+              <div className="hidden sm:block border-r-2 border-gray-200 h-20"></div>
+              <div className="sm:hidden w-full h-px bg-gray-200"></div>
               
-              <div className="space-y-2 text-right">
+              <div className="space-y-1.5 sm:space-y-2 text-right w-full sm:w-auto">
                 {Object.entries(getRatingDistribution()).reverse().map(([rating, count]) => (
-                  <div key={rating} className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-gray-700 w-12">{rating} نجوم</span>
-                    <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div key={rating} className="flex items-center gap-2 sm:gap-3">
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 w-12 sm:w-12">{rating} نجوم</span>
+                    <div className="flex-1 sm:w-24 md:w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-500"
                         style={{ width: `${reviews.length > 0 ? (count / reviews.length) * 100 : 0}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm text-gray-600 w-8">{count}</span>
+                    <span className="text-xs sm:text-sm text-gray-600 w-6 sm:w-8">{count}</span>
                   </div>
                 ))}
               </div>
@@ -204,9 +216,9 @@ export default function ReviewsSection() {
           )}
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Reviews Display */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[...Array(4)].map((_, i) => (
@@ -324,16 +336,16 @@ export default function ReviewsSection() {
             )}
           </div>
 
-          {/* Review Form - Sticky */}
-          <div className="lg:sticky lg:top-24 h-fit">
+          {/* Review Form - Mobile Optimized */}
+          <div className="lg:sticky lg:top-24 h-fit order-1 lg:order-2">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden relative"
+              className="bg-white rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl border-2 border-gray-100 overflow-hidden relative"
             >
               {/* Gradient header */}
-              <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 p-8 text-white relative overflow-hidden">
+              <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 p-5 sm:p-6 lg:p-8 text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-2">
@@ -365,11 +377,11 @@ export default function ReviewsSection() {
                   />
                 </div>
 
-                {/* Rating Stars */}
+                {/* Rating Stars - Mobile Friendly */}
                 <div>
                   <label className="block text-sm font-bold mb-3 text-gray-700">تقييمك</label>
-                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200">
-                    <div className="flex gap-2 justify-center mb-4">
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-4 sm:p-6 border-2 border-gray-200">
+                    <div className="flex gap-1 sm:gap-2 justify-center mb-4 touch-manipulation">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <motion.button
                           key={star}
@@ -379,10 +391,10 @@ export default function ReviewsSection() {
                           onMouseLeave={() => setHoveredStar(0)}
                           whileHover={{ scale: 1.2, rotate: 10 }}
                           whileTap={{ scale: 0.9 }}
-                          className="transition-transform"
+                          className="transition-transform touch-manipulation p-1 sm:p-0"
                         >
                           <Star
-                            className={`w-12 h-12 transition-all duration-200 ${
+                            className={`w-10 h-10 sm:w-12 sm:h-12 transition-all duration-200 ${
                               star <= (hoveredStar || formData.rating)
                                 ? 'text-yellow-400 fill-yellow-400 drop-shadow-xl'
                                 : 'text-gray-300'

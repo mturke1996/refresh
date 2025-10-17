@@ -327,17 +327,38 @@ export default function SettingsManagement() {
         </div>
 
         {/* Telegram Settings */}
-        <div className="card p-6">
-          <h3 className="text-xl font-semibold mb-4">إعدادات التليجرام</h3>
+        <div className="card p-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
+          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <span className="text-2xl">📱</span>
+            إعدادات بوت التليجرام
+          </h3>
+
+          {/* Bot Info */}
+          <div className="bg-blue-100 border border-blue-300 rounded-lg p-4 mb-4">
+            <p className="font-medium text-blue-900 mb-2">🤖 معلومات البوت</p>
+            <div className="space-y-1 text-sm text-blue-800">
+              <p>• اسم البوت: <code className="bg-blue-200 px-2 py-0.5 rounded">@Refrehs_bot</code></p>
+              <p>• الرابط: <a href="https://t.me/Refrehs_bot" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">https://t.me/Refrehs_bot</a></p>
+            </div>
+          </div>
+
+          {/* How to get Chat ID */}
+          <div className="bg-green-50 border border-green-300 rounded-lg p-4 mb-4">
+            <p className="font-medium text-green-900 mb-2">✅ كيفية الحصول على Chat ID:</p>
+            <ol className="text-sm text-green-800 space-y-1 mr-5 list-decimal">
+              <li>افتح التليجرام وابحث عن: <code className="bg-green-200 px-2 py-0.5 rounded">@Refrehs_bot</code></li>
+              <li>اضغط على زر <strong>Start</strong> أو اكتب <code className="bg-green-200 px-2 py-0.5 rounded">/start</code></li>
+              <li>سيرسل لك البوت رسالة ترحيبية تحتوي على Chat ID الخاص بك</li>
+              <li>انسخ Chat ID والصقه في الحقل أدناه</li>
+            </ol>
+          </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">معرفات المحادثة (Chat IDs)</label>
-            <p className="text-sm text-gray-600 mb-3">
-              لاستخراج Chat ID: أرسل رسالة لبوتك على تليجرام، ثم افتح:
-              <br />
-              <code className="bg-gray-100 px-2 py-1 rounded">
-                https://api.telegram.org/bot[YOUR_BOT_TOKEN]/getUpdates
-              </code>
+            <label className="block text-sm font-medium mb-2">
+              معرف المحادثة (Chat ID) 🆔
+            </label>
+            <p className="text-xs text-gray-600 mb-3">
+              ستصلك الإشعارات على الحسابات التي تضيفها هنا
             </p>
 
             <div className="flex gap-2 mb-3">
@@ -345,11 +366,16 @@ export default function SettingsManagement() {
                 type="text"
                 value={newChatId}
                 onChange={(e) => setNewChatId(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addChatId()}
                 className="input flex-1"
-                placeholder="أدخل Chat ID"
+                placeholder="أدخل Chat ID (مثال: 123456789)"
               />
-              <button onClick={addChatId} className="btn-primary px-6">
+              <button 
+                onClick={addChatId} 
+                className="btn-primary px-6 flex items-center gap-2"
+              >
                 <Plus className="w-5 h-5" />
+                إضافة
               </button>
             </div>
 
@@ -357,12 +383,16 @@ export default function SettingsManagement() {
               {settings.telegramChatIds.map((chatId) => (
                 <div
                   key={chatId}
-                  className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
+                  className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
                 >
-                  <code className="font-mono text-sm">{chatId}</code>
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">✅</span>
+                    <code className="font-mono text-sm font-medium">{chatId}</code>
+                  </div>
                   <button
                     onClick={() => removeChatId(chatId)}
-                    className="p-1 hover:bg-red-100 text-red-500 rounded"
+                    className="p-2 hover:bg-red-100 text-red-500 rounded-lg transition-colors"
+                    title="حذف"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -370,22 +400,39 @@ export default function SettingsManagement() {
               ))}
 
               {settings.telegramChatIds.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  لم يتم إضافة أي معرفات محادثة
-                </p>
+                <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <p className="text-2xl mb-2">🔔</p>
+                  <p className="text-sm text-gray-500 font-medium">
+                    لم يتم إضافة أي معرفات محادثة
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    ابدأ بإضافة Chat ID لتفعيل الإشعارات
+                  </p>
+                </div>
               )}
             </div>
           </div>
 
+          {/* Active Features */}
+          {settings.telegramChatIds.length > 0 && (
+            <div className="bg-purple-50 border border-purple-300 rounded-lg p-4 mb-4">
+              <p className="font-medium text-purple-900 mb-2">🔔 الإشعارات المفعلة:</p>
+              <ul className="text-sm text-purple-800 space-y-1 mr-5 list-disc">
+                <li>🛒 طلب جديد - سيصلك إشعار فوري عند كل طلب</li>
+                <li>⭐ تقييم جديد - سيصلك إشعار عند كل تقييم جديد</li>
+                <li>💬 رسالة تواصل - سيصلك إشعار عند كل رسالة جديدة</li>
+              </ul>
+            </div>
+          )}
+
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm">
-            <p className="font-medium text-yellow-900 mb-1">⚠️ ملاحظة أمنية مهمة</p>
+            <p className="font-medium text-yellow-900 mb-1">⚠️ ملاحظة مهمة</p>
             <p className="text-yellow-800">
-              لا تقم بحفظ Telegram Bot Token في قاعدة البيانات. يجب حفظه في Firebase Functions
-              Config فقط باستخدام الأمر:
+              • احفظ هذه الصفحة بعد إضافة Chat ID
               <br />
-              <code className="bg-yellow-100 px-2 py-1 rounded mt-2 inline-block">
-                firebase functions:config:set telegram.token="YOUR_BOT_TOKEN"
-              </code>
+              • يمكنك إضافة أكثر من Chat ID لإرسال الإشعارات لعدة أشخاص
+              <br />
+              • تأكد من نشر Functions أولاً: <code className="bg-yellow-100 px-2 py-0.5 rounded">firebase deploy --only functions</code>
             </p>
           </div>
         </div>

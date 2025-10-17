@@ -5,9 +5,9 @@ import { useCartStore } from '../store/cartStore';
 import { OrderType, OrderCustomer } from '../types';
 import { formatPrice, calculateDiscountedPrice } from '../utils/formatters';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { httpsCallable } from 'firebase/functions';
-import { db, functions } from '../firebase';
+import { db } from '../firebase';
 import toast from 'react-hot-toast';
+import { notifyNewOrder } from '../utils/telegramNotifications';
 
 interface CartProps {
   isOpen: boolean;
@@ -62,10 +62,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
 
       const orderRef = await addDoc(collection(db, 'orders'), orderData);
 
-      // Send to Telegram via Cloud Function
+      // Send notification to Telegram (Free Plan - Direct API)
       try {
-        const sendOrderToTelegram = httpsCallable(functions, 'sendOrderToTelegram');
-        await sendOrderToTelegram({ orderId: orderRef.id });
+        await notifyNewOrder(orderData, orderRef.id);
       } catch (telegramError) {
         console.error('Telegram notification failed:', telegramError);
         // Don't fail the order if Telegram fails

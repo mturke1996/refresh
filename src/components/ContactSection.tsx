@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import toast from 'react-hot-toast';
+import { notifyNewReview } from '../utils/telegramNotifications';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -42,12 +43,22 @@ export default function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, 'comments'), {
+      const reviewData = {
         ...formData,
         approved: false,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      };
+      
+      const docRef = await addDoc(collection(db, 'comments'), reviewData);
+
+      // Send notification to Telegram (Free Plan - Direct API)
+      try {
+        await notifyNewReview({ ...formData, approved: false }, docRef.id);
+      } catch (telegramError) {
+        console.error('Telegram notification failed:', telegramError);
+        // Don't fail the review if Telegram fails
+      }
 
       toast.success('تم إرسال تقييمك بنجاح! سيظهر بعد الموافقة.');
       setFormData({ userName: '', rating: 5, text: '' });
