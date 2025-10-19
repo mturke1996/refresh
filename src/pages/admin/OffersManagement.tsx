@@ -25,9 +25,11 @@ import {
   Percent,
   Tag,
   Image as ImageIcon,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Upload
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { uploadToImgBB } from '../../utils/imgbbUpload';
 
 interface Offer {
   id: string;
@@ -55,6 +57,7 @@ export default function OffersManagement() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     titleEn: '',
@@ -141,6 +144,35 @@ export default function OffersManagement() {
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingOffer(null);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('حجم الصورة كبير جداً. الحد الأقصى 5 ميجابايت');
+      return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('الرجاء اختيار صورة');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const imageUrl = await uploadToImgBB(file);
+      setFormData({ ...formData, imageUrl });
+      toast.success('تم رفع الصورة بنجاح');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('حدث خطأ أثناء رفع الصورة');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -424,19 +456,68 @@ export default function OffersManagement() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Image URL */}
+                  {/* Image Upload */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">رابط الصورة *</label>
-                    <div className="relative">
-                      <ImageIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="url"
-                        value={formData.imageUrl}
-                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                        className="w-full pr-10 pl-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                        placeholder="https://example.com/image.jpg"
-                        required
-                      />
+                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4" />
+                      صورة العرض <span className="text-red-500">*</span>
+                    </label>
+                    
+                    {/* Image Preview */}
+                    {formData.imageUrl && (
+                      <div className="mb-4 p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
+                        <p className="text-xs text-gray-600 mb-2">معاينة الصورة:</p>
+                        <img 
+                          src={formData.imageUrl} 
+                          alt="Preview" 
+                          className="w-full h-48 object-cover rounded-lg shadow-sm"
+                        />
+                      </div>
+                    )}
+
+                    {/* Upload Button */}
+                    <div className="flex gap-3">
+                      <label className="flex-1 cursor-pointer">
+                        <div className="btn-secondary w-full flex items-center justify-center gap-2 text-sm py-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                          {uploadingImage ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+                              جاري الرفع...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4" />
+                              رفع صورة جديدة
+                            </>
+                          )}
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploadingImage}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                    
+                    <p className="text-xs text-gray-500 mt-2">
+                      الحد الأقصى: 5 ميجابايت • الأبعاد المقترحة: 1200x600 بكسل
+                    </p>
+
+                    {/* Manual URL Input */}
+                    <div className="mt-3">
+                      <label className="block text-xs text-gray-600 mb-2">أو أدخل رابط الصورة يدوياً:</label>
+                      <div className="relative">
+                        <LinkIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <input
+                          type="url"
+                          value={formData.imageUrl}
+                          onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                          className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+                          placeholder="https://example.com/image.jpg"
+                        />
+                      </div>
                     </div>
                   </div>
 
