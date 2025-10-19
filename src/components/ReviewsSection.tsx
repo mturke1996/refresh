@@ -137,12 +137,12 @@ export default function ReviewsSection() {
   };
 
   return (
-    <section id="reviews" className="relative py-20 overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white">
-      {/* Animated Background */}
+    <section id="reviews" className="relative py-20 overflow-hidden bg-white">
+      {/* Animated Background - Subtle */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-20 left-10 w-96 h-96 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-4000"></div>
       </div>
       
       <div className="container-custom relative z-10">
@@ -157,13 +157,13 @@ export default function ReviewsSection() {
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-4 px-6 py-3 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full shadow-lg"
+            className="inline-flex items-center gap-2 mb-4 px-6 py-3 bg-black text-white rounded-full shadow-lg"
           >
-            <Award className="w-5 h-5 text-yellow-600" />
-            <span className="text-yellow-900 font-semibold">تقييمات معتمدة</span>
+            <Award className="w-5 h-5" />
+            <span className="font-semibold">تقييمات معتمدة</span>
           </motion.div>
           
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-600 via-orange-600 to-pink-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl font-bold mb-4 text-gray-900">
             آراء عملائنا
           </h2>
           <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto mb-8">
@@ -176,7 +176,7 @@ export default function ReviewsSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-yellow-100 w-full sm:w-auto max-w-md mx-auto"
+              className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-gray-200 w-full sm:w-auto max-w-md mx-auto"
             >
               <div className="text-center">
                 <div className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">{calculateAverageRating()}</div>
@@ -261,19 +261,19 @@ export default function ReviewsSection() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ delay: index * 0.05 }}
                       whileHover={{ y: -5 }}
-                      className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-gray-100 hover:border-yellow-200 relative overflow-hidden group"
+                      className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-gray-100 hover:border-black relative overflow-hidden group"
                     >
                       {/* Decorative corner */}
-                      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-yellow-100 to-transparent opacity-50"></div>
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-gray-100 to-transparent opacity-50"></div>
                       
                       {/* Quote decoration */}
-                      <Quote className="absolute bottom-4 left-4 w-16 h-16 text-gray-50 group-hover:text-yellow-50 transition-colors" />
+                      <Quote className="absolute bottom-4 left-4 w-16 h-16 text-gray-50 group-hover:text-gray-100 transition-colors" />
                       
                       <div className="relative z-10">
                         {/* Header */}
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                            <div className="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
                               <User className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -345,8 +345,8 @@ export default function ReviewsSection() {
               className="bg-white rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl border-2 border-gray-100 overflow-hidden relative"
             >
               {/* Gradient header */}
-              <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 p-5 sm:p-6 lg:p-8 text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/10"></div>
+              <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 p-5 sm:p-6 lg:p-8 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-white/5"></div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-2">
                     <Star className="w-8 h-8 fill-white" />
@@ -356,22 +356,22 @@ export default function ReviewsSection() {
                 </div>
                 
                 {/* Decorative circles */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full"></div>
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full"></div>
+                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/5 rounded-full"></div>
               </div>
 
               <form onSubmit={handleSubmitReview} className="p-8 space-y-6">
                 {/* Name Input */}
                 <div>
                   <label className="block text-sm font-bold mb-3 text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4 text-purple-600" />
+                    <User className="w-4 h-4 text-black" />
                     اسمك <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.userName}
                     onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all text-lg placeholder:text-gray-400"
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all text-lg placeholder:text-gray-400"
                     placeholder="أدخل اسمك"
                     required
                   />
@@ -420,13 +420,13 @@ export default function ReviewsSection() {
                 {/* Comment */}
                 <div>
                   <label className="block text-sm font-bold mb-3 text-gray-700 flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-purple-600" />
+                    <MessageCircle className="w-4 h-4 text-black" />
                     تعليقك <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.text}
                     onChange={(e) => setFormData({ ...formData, text: e.target.value })}
-                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all resize-none text-lg placeholder:text-gray-400"
+                    className="w-full px-5 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all resize-none text-lg placeholder:text-gray-400"
                     rows={5}
                     placeholder="شاركنا تجربتك الرائعة معنا... (على الأقل 10 أحرف)"
                     required
@@ -445,9 +445,9 @@ export default function ReviewsSection() {
                   disabled={isSubmitting || formData.text.length < 10}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-5 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-white rounded-2xl font-bold text-xl shadow-2xl hover:shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+                  className="w-full py-5 bg-black text-white rounded-2xl font-bold text-xl shadow-2xl hover:shadow-black/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-orange-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gray-800 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <span className="relative z-10 flex items-center gap-3">
                     {isSubmitting ? (
                       <>

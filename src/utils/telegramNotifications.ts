@@ -255,3 +255,56 @@ export async function notifyOrderStatusUpdate(
     console.error('Error sending order status update notification:', error);
   }
 }
+
+/**
+ * Format job application message
+ */
+function formatJobApplicationMessage(application: any, applicationId: string): string {
+  let message = `💼 *طلب توظيف جديد - Refresh Cafe*\n\n`;
+  message += `📝 رقم الطلب: \`${applicationId.slice(-8)}\`\n`;
+  message += `💼 الوظيفة: ${application.jobTitle}\n`;
+  message += `⏰ الوقت: ${new Date().toLocaleString('ar-SA')}\n\n`;
+
+  message += `👤 *بيانات المتقدم:*\n`;
+  message += `الاسم: ${application.applicantName}\n`;
+  message += `📱 الهاتف: ${application.applicantPhone}\n`;
+
+  if (application.applicantEmail) {
+    message += `📧 البريد: ${application.applicantEmail}\n`;
+  }
+
+  if (application.cvUrl) {
+    message += `📄 السيرة الذاتية: [عرض الملف](${application.cvUrl})\n`;
+  }
+
+  message += `\n💬 *رسالة المتقدم:*\n${application.message}\n\n`;
+  message += `📊 الحالة: 🆕 جديد`;
+
+  return message;
+}
+
+/**
+ * Send notification for new job application
+ */
+export async function notifyNewJobApplication(
+  application: any,
+  applicationId: string
+): Promise<void> {
+  try {
+    const chatIds = await getChatIds();
+    if (chatIds.length === 0) {
+      console.warn('No Telegram chat IDs configured');
+      return;
+    }
+
+    const message = formatJobApplicationMessage(application, applicationId);
+
+    // Send to all chat IDs
+    const sendPromises = chatIds.map((chatId) => sendTelegramMessage(chatId, message));
+    await Promise.all(sendPromises);
+
+    console.log(`Job application notification sent to ${chatIds.length} recipients`);
+  } catch (error) {
+    console.error('Error sending job application notification:', error);
+  }
+}

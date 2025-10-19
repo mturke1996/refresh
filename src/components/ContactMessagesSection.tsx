@@ -59,45 +59,45 @@ export default function ContactMessagesSection() {
       title: 'اتصل بنا',
       value: '+218 91 123 4567',
       href: 'tel:+218911234567',
-      color: 'from-blue-500 to-cyan-500',
-      bgLight: 'bg-blue-50',
+      color: 'from-gray-700 to-gray-900',
+      bgLight: 'bg-gray-100',
     },
     {
       icon: Mail,
       title: 'راسلنا',
       value: 'info@refresh-cafe.ly',
       href: 'mailto:info@refresh-cafe.ly',
-      color: 'from-purple-500 to-pink-500',
-      bgLight: 'bg-purple-50',
+      color: 'from-gray-700 to-gray-900',
+      bgLight: 'bg-gray-100',
     },
     {
       icon: MapPin,
       title: 'موقعنا',
       value: 'طرابلس، ليبيا',
       href: 'https://maps.app.goo.gl/Xx52hyercV6bfoaN8',
-      color: 'from-green-500 to-emerald-500',
-      bgLight: 'bg-green-50',
+      color: 'from-gray-700 to-gray-900',
+      bgLight: 'bg-gray-100',
     },
     {
       icon: Clock,
       title: 'أوقات العمل',
       value: '6 صباحاً - 2 ليلاً',
       href: null,
-      color: 'from-orange-500 to-red-500',
-      bgLight: 'bg-orange-50',
+      color: 'from-gray-700 to-gray-900',
+      bgLight: 'bg-gray-100',
     },
   ];
 
   return (
     <section
       id="contact"
-      className="relative py-20 overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50"
+      className="relative py-20 overflow-hidden bg-gray-50"
     >
-      {/* Animated Background */}
+      {/* Animated Background - Subtle */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gray-200 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gray-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="container-custom relative z-10">
@@ -112,12 +112,12 @@ export default function ContactMessagesSection() {
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-4 px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full"
+            className="inline-flex items-center gap-2 mb-4 px-6 py-3 bg-black text-white rounded-full shadow-lg"
           >
-            <Sparkles className="w-5 h-5 text-purple-600" />
-            <span className="text-purple-900 font-semibold">تواصل معنا</span>
+            <Sparkles className="w-5 h-5" />
+            <span className="font-semibold">تواصل معنا</span>
           </motion.div>
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl font-bold mb-4 text-gray-900">
             نحن هنا لخدمتك
           </h2>
           <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
@@ -170,11 +170,11 @@ export default function ContactMessagesSection() {
           >
             <div className="bg-white rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl p-5 sm:p-6 md:p-8 lg:p-10 border-2 border-gray-100 relative overflow-hidden">
               {/* Decorative gradient */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 sm:h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"></div>
+              <div className="absolute top-0 left-0 right-0 h-1.5 sm:h-2 bg-black"></div>
 
               <div className="mb-6 sm:mb-8">
                 <h3 className="text-2xl sm:text-3xl font-bold mb-2 flex items-center gap-2 sm:gap-3">
-                  <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 flex-shrink-0" />
+                  <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8 text-black flex-shrink-0" />
                   <span>أرسل لنا رسالة</span>
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base">سنرد عليك في أقرب وقت ممكن</p>
@@ -184,14 +184,14 @@ export default function ContactMessagesSection() {
                 {/* Name Input */}
                 <div className="group">
                   <label className="block text-sm font-bold mb-2 text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4 text-purple-600" />
+                    <User className="w-4 h-4 text-black" />
                     الاسم الكامل <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-base sm:text-lg placeholder:text-gray-400"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all text-base sm:text-lg placeholder:text-gray-400"
                     placeholder="أدخل اسمك الكامل"
                     required
                   />
@@ -201,28 +201,28 @@ export default function ContactMessagesSection() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="group">
                     <label className="block text-sm font-bold mb-2 text-gray-700 flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-purple-600" />
+                      <Mail className="w-4 h-4 text-black" />
                       البريد الإلكتروني
                     </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-base sm:text-lg placeholder:text-gray-400"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all text-base sm:text-lg placeholder:text-gray-400"
                       placeholder="your@email.com"
                     />
                   </div>
 
                   <div className="group">
                     <label className="block text-sm font-bold mb-2 text-gray-700 flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-purple-600" />
+                      <Phone className="w-4 h-4 text-black" />
                       رقم الهاتف
                     </label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-base sm:text-lg placeholder:text-gray-400"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all text-base sm:text-lg placeholder:text-gray-400"
                       placeholder="+218 91 234 5678"
                     />
                   </div>
@@ -231,13 +231,13 @@ export default function ContactMessagesSection() {
                 {/* Message */}
                 <div className="group">
                   <label className="block text-sm font-bold mb-2 text-gray-700 flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-purple-600" />
+                    <MessageSquare className="w-4 h-4 text-black" />
                     رسالتك <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none text-base sm:text-lg placeholder:text-gray-400"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-2 border-gray-200 rounded-xl lg:rounded-2xl focus:bg-white focus:ring-4 focus:ring-black/10 focus:border-black transition-all resize-none text-base sm:text-lg placeholder:text-gray-400"
                     rows={5}
                     placeholder="اكتب رسالتك هنا..."
                     required
@@ -250,9 +250,9 @@ export default function ContactMessagesSection() {
                   disabled={isSubmitting}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 sm:py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white rounded-xl lg:rounded-2xl font-bold text-base sm:text-lg shadow-xl lg:shadow-2xl hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 sm:gap-3 group relative overflow-hidden touch-manipulation"
+                  className="w-full py-4 sm:py-5 bg-black text-white rounded-xl lg:rounded-2xl font-bold text-base sm:text-lg shadow-xl lg:shadow-2xl hover:shadow-black/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 sm:gap-3 group relative overflow-hidden touch-manipulation"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-pink-700 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gray-800 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <span className="relative z-10 flex items-center gap-3">
                     {isSubmitting ? (
                       <>

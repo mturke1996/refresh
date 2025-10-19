@@ -1,11 +1,21 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, updateDoc, doc, query, orderBy, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  query,
+  orderBy,
+  getDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../../firebase';
 import { Order } from '../../types';
 import { formatDate, formatPrice } from '../../utils/formatters';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { notifyOrderStatusUpdate } from '../../utils/telegramNotifications';
+import { Trash2 } from 'lucide-react';
 
 const statusOptions = [
   { value: 'pending', label: 'قيد الانتظار', color: 'bg-yellow-100 text-yellow-700' },
@@ -47,7 +57,7 @@ export default function OrdersManagement() {
   const updateOrderStatus = async (orderId: string, status: Order['status']) => {
     try {
       await updateDoc(doc(db, 'orders', orderId), { status });
-      
+
       // Send Telegram notification
       try {
         const orderDoc = await getDoc(doc(db, 'orders', orderId));
@@ -58,13 +68,36 @@ export default function OrdersManagement() {
         console.error('Failed to send Telegram notification:', telegramError);
         // Don't fail the update if Telegram fails
       }
-      
+
       toast.success('تم تحديث حالة الطلب');
       fetchOrders();
       setSelectedOrder(null);
     } catch (error) {
       console.error('Error updating order:', error);
       toast.error('حدث خطأ أثناء تحديث الطلب');
+    }
+  };
+
+  const deleteOrder = async (orderId: string) => {
+    if (!confirm('هل أنت متأكد من حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.')) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, 'orders', orderId));
+      toast.success('تم حذف الطلب بنجاح');
+      fetchOrders();
+    } catch (error: any) {
+      console.error('Error deleting order:', error);
+
+      // Show detailed error message
+      if (error?.code === 'permission-denied') {
+        toast.error('ليس لديك صلاحية حذف الطلبات. تأكد من تسجيل الدخول كمسؤول.');
+      } else if (error?.message) {
+        toast.error(`حدث خطأ: ${error.message}`);
+      } else {
+        toast.error('حدث خطأ أثناء حذف الطلب');
+      }
     }
   };
 
@@ -119,12 +152,14 @@ export default function OrdersManagement() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-semibold text-lg">طلب #{order.id.slice(-6)}</h3>
-                    <p className="text-sm text-gray-600">
-                      {formatDate(order.createdAt)}
-                    </p>
+                    <p className="text-sm text-gray-600">{formatDate(order.createdAt)}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(order.status)}`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                        order.status
+                      )}`}
+                    >
                       {getStatusLabel(order.status)}
                     </span>
                     <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100">
@@ -162,7 +197,9 @@ export default function OrdersManagement() {
                         <span>
                           {item.name} × {item.quantity}
                         </span>
-                        <span className="font-medium">{formatPrice(item.price * item.quantity)}</span>
+                        <span className="font-medium">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -174,19 +211,28 @@ export default function OrdersManagement() {
               </div>
 
               {/* Status Actions */}
-              <div className="lg:w-48">
-                <label className="block text-sm font-medium mb-2">تحديث الحالة</label>
-                <select
-                  value={order.status}
-                  onChange={(e) => updateOrderStatus(order.id, e.target.value as Order['status'])}
-                  className="input text-sm"
+              <div className="lg:w-48 space-y-3">
+                <div>
+                  <label className="block text-sm font-medium mb-2">تحديث الحالة</label>
+                  <select
+                    value={order.status}
+                    onChange={(e) => updateOrderStatus(order.id, e.target.value as Order['status'])}
+                    className="input text-sm"
+                  >
+                    {statusOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  onClick={() => deleteOrder(order.id)}
+                  className="w-full btn-danger flex items-center justify-center gap-2 text-sm"
                 >
-                  {statusOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  <Trash2 className="w-4 h-4" />
+                  حذف الطلب
+                </button>
               </div>
             </div>
           </motion.div>
@@ -194,11 +240,8 @@ export default function OrdersManagement() {
       </div>
 
       {orders.length === 0 && (
-        <div className="card p-12 text-center text-gray-500">
-          لا توجد طلبات حتى الآن
-        </div>
+        <div className="card p-12 text-center text-gray-500">لا توجد طلبات حتى الآن</div>
       )}
     </div>
   );
 }
-

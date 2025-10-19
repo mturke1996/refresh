@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { ShoppingBag, DollarSign, MessageSquare, TrendingUp, Database, Mail } from 'lucide-react';
+import { ShoppingBag, DollarSign, MessageSquare, TrendingUp, Mail, Briefcase } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { seedDemoData } from '../../utils/seedData';
-import toast from 'react-hot-toast';
 
 interface Stats {
   todayOrders: number;
@@ -12,6 +10,7 @@ interface Stats {
   pendingComments: number;
   totalOrders: number;
   unreadMessages: number;
+  newJobApplications: number;
 }
 
 export default function DashboardHome() {
@@ -21,9 +20,9 @@ export default function DashboardHome() {
     pendingComments: 0,
     totalOrders: 0,
     unreadMessages: 0,
+    newJobApplications: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -36,12 +35,9 @@ export default function DashboardHome() {
       const todayTimestamp = Timestamp.fromDate(today);
 
       // Get today's orders
-      const ordersQuery = query(
-        collection(db, 'orders'),
-        where('createdAt', '>=', todayTimestamp)
-      );
+      const ordersQuery = query(collection(db, 'orders'), where('createdAt', '>=', todayTimestamp));
       const ordersSnapshot = await getDocs(ordersQuery);
-      
+
       let todayRevenue = 0;
       ordersSnapshot.docs.forEach((doc) => {
         const data = doc.data();
@@ -52,18 +48,16 @@ export default function DashboardHome() {
       const allOrdersSnapshot = await getDocs(collection(db, 'orders'));
 
       // Get pending comments
-      const commentsQuery = query(
-        collection(db, 'comments'),
-        where('approved', '==', false)
-      );
+      const commentsQuery = query(collection(db, 'comments'), where('approved', '==', false));
       const commentsSnapshot = await getDocs(commentsQuery);
 
       // Get unread messages
-      const messagesQuery = query(
-        collection(db, 'messages'),
-        where('read', '==', false)
-      );
+      const messagesQuery = query(collection(db, 'messages'), where('read', '==', false));
       const messagesSnapshot = await getDocs(messagesQuery);
+
+      // Get new job applications
+      const jobAppsQuery = query(collection(db, 'jobApplications'), where('read', '==', false));
+      const jobAppsSnapshot = await getDocs(jobAppsQuery);
 
       setStats({
         todayOrders: ordersSnapshot.size,
@@ -71,6 +65,7 @@ export default function DashboardHome() {
         pendingComments: commentsSnapshot.size,
         totalOrders: allOrdersSnapshot.size,
         unreadMessages: messagesSnapshot.size,
+        newJobApplications: jobAppsSnapshot.size,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -105,28 +100,18 @@ export default function DashboardHome() {
       color: 'bg-orange-500',
     },
     {
+      title: 'طلبات توظيف جديدة',
+      value: stats.newJobApplications,
+      icon: Briefcase,
+      color: 'bg-cyan-500',
+    },
+    {
       title: 'إجمالي الطلبات',
       value: stats.totalOrders,
       icon: TrendingUp,
       color: 'bg-pink-500',
     },
   ];
-
-  const handleSeedData = async () => {
-    if (!confirm('هل تريد إضافة بيانات تجريبية؟ (4 فئات + 8 منتجات)')) return;
-    
-    setSeeding(true);
-    const result = await seedDemoData();
-    
-    if (result.success) {
-      toast.success(result.message);
-      fetchStats(); // Refresh stats
-    } else {
-      toast.error(result.message);
-    }
-    
-    setSeeding(false);
-  };
 
   if (loading) {
     return (
@@ -142,18 +127,10 @@ export default function DashboardHome() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6">
         <h2 className="text-2xl font-bold">نظرة عامة</h2>
-        <button
-          onClick={handleSeedData}
-          disabled={seeding}
-          className="btn-secondary flex items-center gap-2 text-sm disabled:opacity-50"
-        >
-          <Database className="w-4 h-4" />
-          {seeding ? 'جاري الإضافة...' : 'إضافة بيانات تجريبية'}
-        </button>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((card, index) => {
           const Icon = card.icon;
@@ -192,4 +169,3 @@ export default function DashboardHome() {
     </div>
   );
 }
-

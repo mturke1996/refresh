@@ -1,5 +1,17 @@
 import { motion } from 'framer-motion';
-import { Phone, Mail, MessageCircle, MapPin, Instagram, Facebook, Twitter, Youtube, Globe, Clock, Star } from 'lucide-react';
+import {
+  Phone,
+  Mail,
+  MessageCircle,
+  MapPin,
+  Instagram,
+  Facebook,
+  Twitter,
+  Youtube,
+  Globe,
+  Clock,
+  Star,
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -23,7 +35,7 @@ export default function ContactSection() {
     try {
       const docRef = doc(db, 'settings', 'general');
       const docSnap = await getDoc(docRef);
-      
+
       if (docSnap.exists()) {
         setSettings(docSnap.data());
       }
@@ -49,7 +61,7 @@ export default function ContactSection() {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
-      
+
       const docRef = await addDoc(collection(db, 'comments'), reviewData);
 
       // Send notification to Telegram (Free Plan - Direct API)
@@ -75,29 +87,29 @@ export default function ContactSection() {
       name: 'Instagram',
       icon: Instagram,
       url: settings?.socialMedia?.instagram || 'https://instagram.com/refresh_cafe',
-      color: 'hover:text-pink-600',
-      bgColor: 'hover:bg-pink-50',
+      gradient: 'from-pink-500 via-purple-500 to-orange-500',
+      hoverGradient: 'hover:from-pink-600 hover:via-purple-600 hover:to-orange-600',
     },
     {
       name: 'Facebook',
       icon: Facebook,
       url: settings?.socialMedia?.facebook || 'https://facebook.com/refresh.cafe',
-      color: 'hover:text-blue-600',
-      bgColor: 'hover:bg-blue-50',
+      gradient: 'from-blue-600 to-blue-700',
+      hoverGradient: 'hover:from-blue-700 hover:to-blue-800',
     },
     {
       name: 'Twitter',
       icon: Twitter,
       url: settings?.socialMedia?.twitter || 'https://twitter.com/refresh_cafe',
-      color: 'hover:text-sky-500',
-      bgColor: 'hover:bg-sky-50',
+      gradient: 'from-sky-400 to-blue-500',
+      hoverGradient: 'hover:from-sky-500 hover:to-blue-600',
     },
     {
       name: 'Youtube',
       icon: Youtube,
       url: settings?.socialMedia?.youtube || 'https://youtube.com/@refresh_cafe',
-      color: 'hover:text-red-600',
-      bgColor: 'hover:bg-red-50',
+      gradient: 'from-red-500 to-red-600',
+      hoverGradient: 'hover:from-red-600 hover:to-red-700',
     },
   ];
 
@@ -127,7 +139,7 @@ export default function ContactSection() {
             className="space-y-4"
           >
             {/* Phone */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02, x: 5 }}
               className="card p-6 flex items-center gap-4 group cursor-pointer transition-all hover:shadow-xl"
             >
@@ -146,7 +158,7 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Email */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02, x: 5 }}
               className="card p-6 flex items-center gap-4 group cursor-pointer transition-all hover:shadow-xl"
             >
@@ -165,7 +177,7 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Telegram */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02, x: 5 }}
               className="card p-6 flex items-center gap-4 group cursor-pointer transition-all hover:shadow-xl"
             >
@@ -186,7 +198,7 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Location */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02, x: 5 }}
               className="card p-6 flex items-center gap-4 group cursor-pointer transition-all hover:shadow-xl"
             >
@@ -207,7 +219,7 @@ export default function ContactSection() {
             </motion.div>
 
             {/* Working Hours */}
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.02, x: 5 }}
               className="card p-6 flex items-center gap-4 group cursor-pointer transition-all hover:shadow-xl"
             >
@@ -317,15 +329,15 @@ export default function ContactSection() {
           </motion.div>
         </div>
 
-        {/* Social Media Section */}
+        {/* Social Media Section - Enhanced with Colors */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <h3 className="text-2xl font-bold mb-6">تابعنا على</h3>
-          <div className="flex justify-center gap-4 flex-wrap">
+          <h3 className="text-3xl font-bold mb-8">تابعنا على</h3>
+          <div className="flex justify-center gap-5 flex-wrap">
             {socialLinks.map((social) => (
               <motion.a
                 key={social.name}
@@ -334,10 +346,13 @@ export default function ContactSection() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.95 }}
-                className={`flex items-center gap-3 px-6 py-4 card ${social.bgColor} ${social.color} transition-all shadow-lg hover:shadow-2xl group`}
+                className={`flex items-center gap-3 px-8 py-5 bg-gradient-to-r ${social.gradient} ${social.hoverGradient} text-white rounded-2xl transition-all shadow-xl hover:shadow-2xl group`}
               >
-                <social.icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                <span className="font-semibold">{social.name}</span>
+                <social.icon
+                  className="w-7 h-7 group-hover:scale-110 transition-transform drop-shadow-lg"
+                  strokeWidth={2.5}
+                />
+                <span className="font-bold text-lg">{social.name}</span>
               </motion.a>
             ))}
           </div>

@@ -16,6 +16,8 @@ import {
   X,
   Tag,
   Mail,
+  Briefcase,
+  Users,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -28,6 +30,8 @@ import CommentsManagement from './CommentsManagement';
 import SettingsManagement from './SettingsManagement';
 import OffersManagement from './OffersManagement';
 import MessagesManagement from './MessagesManagement';
+import JobsManagement from './JobsManagement';
+import JobApplicationsManagement from './JobApplicationsManagement';
 
 const menuItems = [
   { path: '/admin/dashboard', icon: Home, label: 'الرئيسية' },
@@ -37,6 +41,8 @@ const menuItems = [
   { path: '/admin/orders', icon: ShoppingBag, label: 'الطلبات' },
   { path: '/admin/messages', icon: Mail, label: 'الرسائل' },
   { path: '/admin/comments', icon: MessageSquare, label: 'التقييمات' },
+  { path: '/admin/jobs', icon: Briefcase, label: 'الوظائف' },
+  { path: '/admin/job-applications', icon: Users, label: 'طلبات التوظيف' },
   { path: '/admin/settings', icon: Settings, label: 'الإعدادات' },
 ];
 
@@ -159,6 +165,8 @@ export default function AdminDashboard() {
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="messages" element={<MessagesManagement />} />
               <Route path="comments" element={<CommentsManagement />} />
+              <Route path="jobs" element={<JobsManagement />} />
+              <Route path="job-applications" element={<JobApplicationsManagement />} />
               <Route path="settings" element={<SettingsManagement />} />
               <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
             </Routes>

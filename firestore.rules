@@ -8,7 +8,7 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return isSignedIn() && request.auth.token.email != null;
+      return isSignedIn();
     }
     
     // Categories - Read: Everyone, Write: Admin only
@@ -23,14 +23,13 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
     
-    // Orders - Create: Anyone, Read/Update: Admin only
+    // Orders - Create: Anyone, Read/Update/Delete: Admin only
     match /orders/{orderId} {
       allow create: if request.resource.data.keys().hasAll(['items', 'total', 'type', 'customer', 'status'])
                     && request.resource.data.items.size() > 0
                     && request.resource.data.total > 0
                     && request.resource.data.status == 'pending';
-      allow read, update: if isAdmin();
-      allow delete: if false;
+      allow read, update, delete: if isAdmin();
     }
     
     // Comments/Reviews - Create: Anyone, Read approved: Everyone, Admin: Full access
@@ -65,6 +64,20 @@ service cloud.firestore {
     // Admin Logs - Admin only
     match /admin_logs/{logId} {
       allow read, write: if isAdmin();
+    }
+    
+    // Jobs - Read active: Everyone, Write: Admin only
+    match /jobs/{jobId} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Job Applications - Create: Anyone, Read/Update/Delete: Admin only
+    match /jobApplications/{applicationId} {
+      allow create: if request.resource.data.keys().hasAll(['jobId', 'jobTitle', 'applicantName', 'applicantPhone', 'message'])
+                    && request.resource.data.status == 'new'
+                    && request.resource.data.read == false;
+      allow read, update, delete: if isAdmin();
     }
   }
 }

@@ -98,6 +98,8 @@ export interface Settings {
   socialMedia?: {
     instagram?: string;
     facebook?: string;
+    twitter?: string;
+    youtube?: string;
     snapchat?: string;
     tiktok?: string;
     website?: string;
@@ -113,3 +115,30 @@ export interface AdminLog {
   timestamp: Date;
 }
 
+export interface Job {
+  id: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  salary?: string;
+  workType: 'full-time' | 'part-time' | 'temporary';
+  location: string;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  jobTitle: string;
+  applicantName: string;
+  applicantPhone: string;
+  applicantEmail?: string;
+  cvUrl?: string;
+  message: string;
+  status: 'new' | 'reviewing' | 'interviewed' | 'accepted' | 'rejected';
+  read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
