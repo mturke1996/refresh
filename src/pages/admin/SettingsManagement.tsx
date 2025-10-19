@@ -584,7 +584,7 @@ export default function SettingsManagement() {
           <h3 className="text-xl font-semibold mb-4">إعدادات التوصيل</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">رسوم التوصيل (ر.س)</label>
+              <label className="block text-sm font-medium mb-2">رسوم التوصيل (د.ل)</label>
               <input
                 type="number"
                 value={settings.deliveryFee || 0}
@@ -594,10 +594,12 @@ export default function SettingsManagement() {
                 className="input"
                 min="0"
                 step="0.01"
+                placeholder="مثال: 5"
               />
+              <p className="text-xs text-gray-500 mt-1">رسوم التوصيل بالدينار الليبي</p>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">الحد الأدنى للطلب (ر.س)</label>
+              <label className="block text-sm font-medium mb-2">الحد الأدنى للطلب (د.ل)</label>
               <input
                 type="number"
                 value={settings.minOrderAmount || 0}
@@ -607,7 +609,9 @@ export default function SettingsManagement() {
                 className="input"
                 min="0"
                 step="0.01"
+                placeholder="مثال: 20"
               />
+              <p className="text-xs text-gray-500 mt-1">الحد الأدنى لقبول الطلب</p>
             </div>
           </div>
         </div>

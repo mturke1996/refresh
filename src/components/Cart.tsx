@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, Trash2 } from 'lucide-react';
+import { X, Plus, Minus, Trash2, Truck, AlertCircle } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 import { OrderType, OrderCustomer } from '../types';
 import { formatPrice, calculateDiscountedPrice } from '../utils/formatters';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import toast from 'react-hot-toast';
 import { notifyNewOrder } from '../utils/telegramNotifications';
@@ -24,6 +24,29 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     notes: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const docRef = doc(db, 'settings', 'general');
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        setSettings(docSnap.data());
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
+  const deliveryFee = orderType === 'delivery' ? (settings.deliveryFee || 0) : 0;
+  const subtotal = getTotal();
+  const total = subtotal + deliveryFee;
+  const minOrderAmount = settings.minOrderAmount || 0;
 
   const handleSubmitOrder = async () => {
     if (items.length === 0) {
@@ -41,6 +64,12 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       return;
     }
 
+    // Check minimum order amount
+    if (minOrderAmount > 0 && subtotal < minOrderAmount) {
+      toast.error(`الحد الأدنى للطلب هو ${formatPrice(minOrderAmount)}`);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -52,7 +81,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           price: calculateDiscountedPrice(item.price, item.discountPercent),
           quantity,
         })),
-        total: getTotal(),
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
+        total: total,
         type: orderType,
         customer,
         status: 'pending',
@@ -238,13 +269,46 @@ export default function Cart({ isOpen, onClose }: CartProps) {
             {/* Footer */}
             {items.length > 0 && (
               <div className="p-6 border-t space-y-4">
-                <div className="flex items-center justify-between text-lg font-bold">
-                  <span>الإجمالي</span>
-                  <span>{formatPrice(getTotal())}</span>
+                {/* Subtotal */}
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">المجموع الفرعي</span>
+                  <span className="font-medium">{formatPrice(subtotal)}</span>
                 </div>
+
+                {/* Delivery Fee */}
+                {orderType === 'delivery' && deliveryFee > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600 flex items-center gap-1">
+                      <Truck className="w-4 h-4" />
+                      رسوم التوصيل
+                    </span>
+                    <span className="font-medium">{formatPrice(deliveryFee)}</span>
+                  </div>
+                )}
+
+                {/* Minimum Order Warning */}
+                {minOrderAmount > 0 && subtotal < minOrderAmount && (
+                  <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+                    <p className="text-xs text-yellow-800">
+                      الحد الأدنى للطلب: {formatPrice(minOrderAmount)}
+                      <br />
+                      <span className="font-medium">
+                        أضف {formatPrice(minOrderAmount - subtotal)} للمتابعة
+                      </span>
+                    </p>
+                  </div>
+                )}
+
+                {/* Total */}
+                <div className="flex items-center justify-between text-xl font-bold pt-3 border-t">
+                  <span>الإجمالي</span>
+                  <span>{formatPrice(total)}</span>
+                </div>
+
                 <button
                   onClick={handleSubmitOrder}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (minOrderAmount > 0 && subtotal < minOrderAmount)}
                   className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}

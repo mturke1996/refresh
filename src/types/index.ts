@@ -47,6 +47,8 @@ export interface Order {
     price: number;
     quantity: number;
   }[];
+  subtotal?: number;
+  deliveryFee?: number;
   total: number;
   type: OrderType;
   customer: OrderCustomer;
