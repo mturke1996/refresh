@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, Trash2, Truck, AlertCircle } from 'lucide-react';
+import { X, Plus, Minus, Trash2, Truck, AlertCircle, Home, User, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 import { OrderType, OrderCustomer } from '../types';
 import { formatPrice, calculateDiscountedPrice } from '../utils/formatters';
@@ -181,7 +181,8 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                         <img
                           src={item.imageUrl}
                           alt={item.name}
-                          className="w-20 h-20 object-cover rounded-lg"
+                          loading="lazy"
+                          className="w-20 h-20 object-cover rounded-lg bg-gray-200"
                         />
                         <div className="flex-1">
                           <h3 className="font-semibold">{item.name}</h3>
@@ -218,33 +219,36 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => setOrderType('dine-in')}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           orderType === 'dine-in'
                             ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        🏠 داخلي
+                        <Home className="w-4 h-4" />
+                        داخلي
                       </button>
                       <button
                         onClick={() => setOrderType('pickup')}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           orderType === 'pickup'
                             ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        🚶 استلام
+                        <ShoppingBag className="w-4 h-4" />
+                        استلام
                       </button>
                       <button
                         onClick={() => setOrderType('delivery')}
-                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           orderType === 'delivery'
                             ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        🚗 توصيل
+                        <Truck className="w-4 h-4" />
+                        توصيل
                       </button>
                     </div>
                   </div>

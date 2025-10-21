@@ -186,8 +186,18 @@ export default function JobsManagement() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-xl font-bold text-gray-900">{job.title}</h3>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${job.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                    {job.active ? '🟢 نشط' : '⚪ غير نشط'}
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${job.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                    {job.active ? (
+                      <>
+                        <Eye className="w-3 h-3" />
+                        نشط
+                      </>
+                    ) : (
+                      <>
+                        <EyeOff className="w-3 h-3" />
+                        غير نشط
+                      </>
+                    )}
                   </span>
                 </div>
                 

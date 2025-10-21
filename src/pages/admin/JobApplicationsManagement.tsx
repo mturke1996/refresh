@@ -5,7 +5,7 @@ import { JobApplication } from '../../types';
 import { formatDate } from '../../utils/formatters';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { Briefcase, Mail, Phone, FileText, Trash2, Eye, Download } from 'lucide-react';
+import { Briefcase, Mail, Phone, FileText, Trash2, Eye, Download, Circle } from 'lucide-react';
 
 const statusOptions = [
   { value: 'new', label: 'جديد', color: 'bg-blue-100 text-blue-700' },
@@ -133,7 +133,8 @@ export default function JobApplicationsManagement() {
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-bold text-lg">{app.applicantName}</h3>
                       {!app.read && (
-                        <span className="px-2 py-1 bg-blue-500 text-white text-xs rounded-full animate-pulse">
+                        <span className="px-2 py-1 bg-blue-500 text-white text-xs rounded-full animate-pulse flex items-center gap-1">
+                          <Circle className="w-3 h-3 fill-white" />
                           جديد
                         </span>
                       )}

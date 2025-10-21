@@ -19,6 +19,9 @@ import {
   Image as ImageIcon,
   Twitter,
   Youtube,
+  MessageSquare,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react';
 import { uploadToImgBB } from '../../utils/imgbbUpload';
 
@@ -393,7 +396,9 @@ export default function SettingsManagement() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                <span className="text-yellow-400">📸</span>
+                <div className="w-4 h-4 bg-yellow-400 rounded flex items-center justify-center">
+                  <span className="text-xs">S</span>
+                </div>
                 سناب شات
               </label>
               <input
@@ -414,7 +419,9 @@ export default function SettingsManagement() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                <span>🎵</span>
+                <div className="w-4 h-4 bg-black rounded flex items-center justify-center">
+                  <span className="text-xs text-white">T</span>
+                </div>
                 تيك توك
               </label>
               <input
@@ -466,7 +473,10 @@ export default function SettingsManagement() {
 
           {/* Bot Info */}
           <div className="bg-blue-100 border border-blue-300 rounded-lg p-4 mb-4">
-            <p className="font-medium text-blue-900 mb-2">🤖 معلومات البوت</p>
+            <p className="font-medium text-blue-900 mb-2 flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              معلومات البوت
+            </p>
             <div className="space-y-1 text-sm text-blue-800">
               <p>
                 • اسم البوت: <code className="bg-blue-200 px-2 py-0.5 rounded">@Refrehs_bot</code>
@@ -487,7 +497,10 @@ export default function SettingsManagement() {
 
           {/* How to get Chat ID */}
           <div className="bg-green-50 border border-green-300 rounded-lg p-4 mb-4">
-            <p className="font-medium text-green-900 mb-2">✅ كيفية الحصول على Chat ID:</p>
+            <p className="font-medium text-green-900 mb-2 flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              كيفية الحصول على Chat ID:
+            </p>
             <ol className="text-sm text-green-800 space-y-1 mr-5 list-decimal">
               <li>
                 افتح التليجرام وابحث عن:{' '}
@@ -556,7 +569,10 @@ export default function SettingsManagement() {
           {/* Active Features */}
           {settings.telegramChatIds.length > 0 && (
             <div className="bg-purple-50 border border-purple-300 rounded-lg p-4 mb-4">
-              <p className="font-medium text-purple-900 mb-2">🔔 الإشعارات المفعلة:</p>
+              <p className="font-medium text-purple-900 mb-2 flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" />
+                الإشعارات المفعلة:
+              </p>
               <ul className="text-sm text-purple-800 space-y-1 mr-5 list-disc">
                 <li>🛒 طلب جديد - سيصلك إشعار فوري عند كل طلب</li>
                 <li>⭐ تقييم جديد - سيصلك إشعار عند كل تقييم جديد</li>
@@ -566,7 +582,10 @@ export default function SettingsManagement() {
           )}
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm">
-            <p className="font-medium text-yellow-900 mb-1">⚠️ ملاحظة مهمة</p>
+            <p className="font-medium text-yellow-900 mb-1 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              ملاحظة مهمة
+            </p>
             <p className="text-yellow-800">
               • احفظ هذه الصفحة بعد إضافة Chat ID
               <br />
