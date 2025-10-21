@@ -23,6 +23,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     address: '',
     notes: '',
   });
+  const [tableNumber, setTableNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [settings, setSettings] = useState<any>({});
 
@@ -43,6 +44,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     }
   };
 
+  const isExternal = orderType === 'pickup' || orderType === 'delivery';
   const deliveryFee = orderType === 'delivery' ? (settings.deliveryFee || 0) : 0;
   const subtotal = getTotal();
   const total = subtotal + deliveryFee;
@@ -54,18 +56,28 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       return;
     }
 
-    if (!customer.name || !customer.phone) {
-      toast.error('الرجاء إدخال الاسم ورقم الهاتف');
-      return;
+    // Validation for internal orders (داخلي)
+    if (orderType === 'dine-in') {
+      if (!tableNumber) {
+        toast.error('الرجاء إدخال رقم الطاولة');
+        return;
+      }
     }
 
-    if (orderType === 'delivery' && !customer.address) {
-      toast.error('الرجاء إدخال العنوان للتوصيل');
-      return;
+    // Validation for external orders (خارجي)
+    if (isExternal) {
+      if (!customer.name) {
+        toast.error('الرجاء إدخال الاسم');
+        return;
+      }
+      if (orderType === 'delivery' && !customer.address) {
+        toast.error('الرجاء إدخال العنوان للتوصيل');
+        return;
+      }
     }
 
-    // Check minimum order amount
-    if (minOrderAmount > 0 && subtotal < minOrderAmount) {
+    // Check minimum order amount for external orders only
+    if (isExternal && minOrderAmount > 0 && subtotal < minOrderAmount) {
       toast.error(`الحد الأدنى للطلب هو ${formatPrice(minOrderAmount)}`);
       return;
     }
@@ -85,7 +97,14 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         deliveryFee: deliveryFee,
         total: total,
         type: orderType,
-        customer,
+        customer: orderType === 'dine-in' 
+          ? { 
+              name: customer.name || `طاولة ${tableNumber}`, 
+              phone: tableNumber, // Store table number in phone field
+              notes: customer.notes 
+            }
+          : customer,
+        tableNumber: orderType === 'dine-in' ? tableNumber : undefined,
         status: 'pending',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -104,6 +123,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       toast.success('تم إرسال الطلب بنجاح!');
       clearCart();
       setCustomer({ name: '', phone: '', address: '', notes: '' });
+      setTableNumber('');
       onClose();
     } catch (error) {
       console.error('Order submission error:', error);
@@ -195,72 +215,120 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                   {/* Order Type */}
                   <div className="pt-4 border-t">
                     <label className="block text-sm font-medium mb-2">نوع الطلب</label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => setOrderType('dine-in')}
-                        className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+                        className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${
                           orderType === 'dine-in'
-                            ? 'bg-black text-white'
+                            ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        في المقهى
+                        🏠 داخلي
                       </button>
                       <button
                         onClick={() => setOrderType('pickup')}
-                        className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                          orderType === 'pickup'
-                            ? 'bg-black text-white'
+                        className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${
+                          isExternal
+                            ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        استلام
-                      </button>
-                      <button
-                        onClick={() => setOrderType('delivery')}
-                        className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                          orderType === 'delivery'
-                            ? 'bg-black text-white'
-                            : 'bg-gray-100 hover:bg-gray-200'
-                        }`}
-                      >
-                        توصيل
+                        🚗 خارجي
                       </button>
                     </div>
                   </div>
 
-                  {/* Customer Info */}
+                  {/* Customer Info - Based on Order Type */}
                   <div className="space-y-3">
-                    <input
-                      type="text"
-                      placeholder="الاسم *"
-                      value={customer.name}
-                      onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
-                      className="input"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="رقم الهاتف *"
-                      value={customer.phone}
-                      onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-                      className="input"
-                    />
-                    {orderType === 'delivery' && (
-                      <input
-                        type="text"
-                        placeholder="العنوان *"
-                        value={customer.address}
-                        onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
-                        className="input"
-                      />
+                    {orderType === 'dine-in' ? (
+                      // داخلي - Internal Order
+                      <>
+                        <div>
+                          <label className="block text-xs font-medium mb-1 text-gray-700">
+                            رقم الطاولة <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="مثال: 5"
+                            value={tableNumber}
+                            onChange={(e) => setTableNumber(e.target.value)}
+                            className="input"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1 text-gray-700">
+                            الاسم (اختياري)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="أدخل اسمك (اختياري)"
+                            value={customer.name}
+                            onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+                            className="input"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      // خارجي - External Order
+                      <>
+                        <div>
+                          <label className="block text-xs font-medium mb-1 text-gray-700">
+                            الاسم <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="أدخل اسمك"
+                            value={customer.name}
+                            onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+                            className="input"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1 text-gray-700">
+                            رقم الهاتف (اختياري)
+                          </label>
+                          <input
+                            type="tel"
+                            placeholder="+218 XX XXX XXXX"
+                            value={customer.phone}
+                            onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
+                            className="input"
+                          />
+                        </div>
+                        {orderType === 'delivery' && (
+                          <div>
+                            <label className="block text-xs font-medium mb-1 text-gray-700">
+                              العنوان <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="أدخل عنوانك"
+                              value={customer.address}
+                              onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
+                              className="input"
+                              required
+                            />
+                          </div>
+                        )}
+                      </>
                     )}
-                    <textarea
-                      placeholder="ملاحظات (اختياري)"
-                      value={customer.notes}
-                      onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
-                      className="input resize-none"
-                      rows={2}
-                    />
+                    
+                    {/* Notes - Always Optional */}
+                    <div>
+                      <label className="block text-xs font-medium mb-1 text-gray-700">
+                        ملاحظات (اختياري)
+                      </label>
+                      <textarea
+                        placeholder="أي ملاحظات إضافية..."
+                        value={customer.notes}
+                        onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
+                        className="input resize-none"
+                        rows={2}
+                      />
+                    </div>
                   </div>
                 </>
               )}
@@ -286,12 +354,12 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                   </div>
                 )}
 
-                {/* Minimum Order Warning */}
-                {minOrderAmount > 0 && subtotal < minOrderAmount && (
+                {/* Minimum Order Warning - Only for External Orders */}
+                {isExternal && minOrderAmount > 0 && subtotal < minOrderAmount && (
                   <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
                     <p className="text-xs text-yellow-800">
-                      الحد الأدنى للطلب: {formatPrice(minOrderAmount)}
+                      الحد الأدنى للطلب الخارجي: {formatPrice(minOrderAmount)}
                       <br />
                       <span className="font-medium">
                         أضف {formatPrice(minOrderAmount - subtotal)} للمتابعة
@@ -308,7 +376,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
 
                 <button
                   onClick={handleSubmitOrder}
-                  disabled={isSubmitting || (minOrderAmount > 0 && subtotal < minOrderAmount)}
+                  disabled={isSubmitting || (isExternal && minOrderAmount > 0 && subtotal < minOrderAmount)}
                   className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}

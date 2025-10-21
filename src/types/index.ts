@@ -52,6 +52,7 @@ export interface Order {
   total: number;
   type: OrderType;
   customer: OrderCustomer;
+  tableNumber?: string;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
   createdAt: Date;
   updatedAt: Date;
