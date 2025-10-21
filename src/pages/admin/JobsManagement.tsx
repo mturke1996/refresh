@@ -4,7 +4,7 @@ import { db } from '../../firebase';
 import { Job } from '../../types';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Edit, Trash2, Save, X, MapPin, DollarSign, Clock } from 'lucide-react';
+import { Briefcase, Plus, Edit, Trash2, Save, X, MapPin, DollarSign, Clock, Eye, EyeOff } from 'lucide-react';
 
 export default function JobsManagement() {
   const [jobs, setJobs] = useState<Job[]>([]);
