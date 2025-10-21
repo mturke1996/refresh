@@ -215,10 +215,10 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                   {/* Order Type */}
                   <div className="pt-4 border-t">
                     <label className="block text-sm font-medium mb-2">نوع الطلب</label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => setOrderType('dine-in')}
-                        className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
                           orderType === 'dine-in'
                             ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
@@ -228,13 +228,23 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                       </button>
                       <button
                         onClick={() => setOrderType('pickup')}
-                        className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${
-                          isExternal
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
+                          orderType === 'pickup'
                             ? 'bg-black text-white shadow-lg'
                             : 'bg-gray-100 hover:bg-gray-200'
                         }`}
                       >
-                        🚗 خارجي
+                        🚶 استلام
+                      </button>
+                      <button
+                        onClick={() => setOrderType('delivery')}
+                        className={`py-3 px-3 rounded-xl text-xs font-bold transition-all ${
+                          orderType === 'delivery'
+                            ? 'bg-black text-white shadow-lg'
+                            : 'bg-gray-100 hover:bg-gray-200'
+                        }`}
+                      >
+                        🚗 توصيل
                       </button>
                     </div>
                   </div>
