@@ -58,9 +58,9 @@ async function sendTelegramMessage(chatId: string, message: string): Promise<boo
  */
 function formatOrderMessage(order: any, orderId: string): string {
   const orderTypeLabels: { [key: string]: string } = {
-    'dine-in': 'داخل المقهى',
-    pickup: 'استلام',
-    delivery: 'توصيل',
+    'dine-in': '🏠 داخلي (داخل المقهى)',
+    pickup: '🚶 خارجي (استلام)',
+    delivery: '🚗 خارجي (توصيل)',
   };
 
   const statusLabels: { [key: string]: string } = {
@@ -79,23 +79,42 @@ function formatOrderMessage(order: any, orderId: string): string {
   message += `⏰ الوقت: ${new Date().toLocaleString('ar-SA')}\n\n`;
 
   message += `👤 *بيانات العميل:*\n`;
-  message += `الاسم: ${order.customer.name}\n`;
-  message += `الهاتف: ${order.customer.phone}\n`;
+  
+  // Check if it's an internal order (dine-in)
+  if (order.type === 'dine-in') {
+    message += `🪑 رقم الطاولة: ${order.tableNumber || order.customer.phone}\n`;
+    if (order.customer.name && order.customer.name !== `طاولة ${order.tableNumber}`) {
+      message += `الاسم: ${order.customer.name}\n`;
+    }
+  } else {
+    // External order (pickup or delivery)
+    message += `الاسم: ${order.customer.name}\n`;
+    if (order.customer.phone) {
+      message += `📱 الهاتف: ${order.customer.phone}\n`;
+    }
+  }
 
   if (order.customer.address) {
-    message += `العنوان: ${order.customer.address}\n`;
+    message += `📍 العنوان: ${order.customer.address}\n`;
   }
 
   if (order.customer.notes) {
-    message += `ملاحظات: ${order.customer.notes}\n`;
+    message += `📝 ملاحظات: ${order.customer.notes}\n`;
   }
 
   message += `\n🛒 *المنتجات:*\n`;
   order.items.forEach((item: any) => {
-    message += `• ${item.name} × ${item.quantity} = ${item.price * item.quantity} د.ل\n`;
+    message += `• ${item.name} × ${item.quantity} = ${(item.price * item.quantity).toFixed(2)} د.ل\n`;
   });
 
-  message += `\n💰 *الإجمالي: ${order.total} د.ل*`;
+  message += `\n💵 *التفاصيل المالية:*\n`;
+  if (order.subtotal) {
+    message += `المجموع الفرعي: ${order.subtotal.toFixed(2)} د.ل\n`;
+  }
+  if (order.deliveryFee && order.deliveryFee > 0) {
+    message += `رسوم التوصيل: ${order.deliveryFee.toFixed(2)} د.ل\n`;
+  }
+  message += `💰 *الإجمالي: ${order.total.toFixed(2)} د.ل*`;
 
   return message;
 }
